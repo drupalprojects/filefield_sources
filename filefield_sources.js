@@ -1,4 +1,8 @@
+(function ($) {
 
+/**
+ * Behavior to add source options to configured fields.
+ */
 Drupal.behaviors.fileFieldSources = function(context) {
   $('div.filefield-sources-list a', context).click(function() {
     $fileFieldElement = $(this).parents('div.form-item:first').find('div.filefield-element:first');
@@ -98,3 +102,5 @@ Drupal.fileFieldSources = {
     $('div.filefield-element input.hint').val('').removeClass('hint');
   }
 };
+
+})(jQuery);

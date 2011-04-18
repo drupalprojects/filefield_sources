@@ -10,7 +10,7 @@
  */
 
 /**
- * Implementation of hook_filefield_source_info().
+ * Implements hook_filefield_source_info().
  */
 function filefield_source_attach_info() {
   $source = array();
@@ -26,7 +26,7 @@ function filefield_source_attach_info() {
 }
 
 /**
- * Implementation of hook_theme().
+ * Implements hook_theme().
  */
 function filefield_source_attach_theme() {
   return array(
@@ -38,7 +38,7 @@ function filefield_source_attach_theme() {
 }
 
 /**
- * Implementation of hook_filefield_source_settings().
+ * Implements hook_filefield_source_settings().
  */
 function filefield_source_attach_settings($op, $field) {
   $return = array();
@@ -62,7 +62,7 @@ function filefield_source_attach_settings($op, $field) {
       '#description' => t('The directory within the <em>File attach location</em> that will contain attachable files.'),
     );
     $return['source_attach']['filefield_source_attach_absolute'] = array(
-      '#type' => 'radios', 
+      '#type' => 'radios',
       '#title' => t('File attach location'),
       '#options' => array(
         0 => t('Within the files directory'),
@@ -112,6 +112,8 @@ function _filefield_source_attach_file_path_validate($element, &$form_state) {
  */
 function filefield_source_attach_process($element, $edit, &$form_state, $form) {
   $field = content_fields($element['#field_name'], $element['#type_name']);
+  $instance = $field['widget'];
+  $settings = $instance;
 
   $element['filefield_attach'] = array(
     '#theme' => 'filefield_source_attach_element',
@@ -125,9 +127,9 @@ function filefield_source_attach_process($element, $edit, &$form_state, $form) {
   $description = t('This method may be used to attach files that exceed the file size limit. Files may be attached from the %directory directory on the server, usually uploaded through FTP.', array('%directory' => realpath($path)));
 
   // Error messages.
-  if ($options === FALSE || empty($field['widget']['filefield_source_attach_path'])) {
+  if ($options === FALSE || empty($settings['filefield_source_attach_path'])) {
     $attach_message = t('A file attach directory could not be located.');
-    $attach_description = t('Please check your settings for the %field field.',  array('%field' => $field['widget']['label']));
+    $attach_description = t('Please check your settings for the %field field.',  array('%field' => $instance['label']));
   }
   elseif (!count($options)) {
     $attach_message = t('There currently no files to attach.');
@@ -155,13 +157,13 @@ function filefield_source_attach_process($element, $edit, &$form_state, $form) {
 
   $element['filefield_attach']['attach'] = array(
     '#type' => 'submit',
-    '#value' => $attach_message ? t('Refresh') : t('Attach'),
+    '#value' => isset($attach_message) ? t('Refresh') : t('Attach'),
     '#submit' => array('node_form_submit_build_node'),
     '#ahah' => array(
-       'path' => 'filefield/ahah/'. $element['#type_name'] .'/'. $element['#field_name'] .'/'. $element['#delta'],
-       'wrapper' => $element['#id'] .'-ahah-wrapper',
-       'method' => 'replace',
-       'effect' => 'fade',
+      'path' => 'filefield/ahah/' . $element['#type_name'] . '/' . $element['#field_name'] . '/' . $element['#delta'],
+      'wrapper' => $element['#id'] . '-ahah-wrapper',
+      'method' => 'replace',
+      'effect' => 'fade',
     ),
   );
 
@@ -238,9 +240,9 @@ function theme_filefield_source_attach_element($element) {
   }
   else {
     $select = '';
-    $size = $element['#size'] ? ' size="'. $element['filename']['#size'] .'"' : '';
+    $size = !empty($element['filename']['#size']) ? ' size="' . $element['filename']['#size'] . '"' : '';
     _form_set_class($element['filename'], array('form-select'));
-    $multiple = $element['#multiple'];
+    $multiple = !empty($element['#multiple']);
     $output = '<select name="'. $element['filename']['#name'] .''. ($multiple ? '[]' : '') .'"'. ($multiple ? ' multiple="multiple" ' : '') . drupal_attributes($element['filename']['#attributes']) .' id="'. $element['filename']['#id'] .'" '. $size .'>'. form_select_options($element['filename']) .'</select>';
   }
   $output .= theme('submit', $element['attach']);
@@ -248,10 +250,10 @@ function theme_filefield_source_attach_element($element) {
   return '<div class="filefield-source filefield-source-attach clear-block">' . theme('form_element', $element, $output) . '</div>';
 }
 
-function _filefield_source_attach_directory($field, $account = NULL) {
+function _filefield_source_attach_directory($settings, $account = NULL) {
   $account = isset($account) ? $account : $GLOBALS['user'];  
-  $path = $field['filefield_source_attach_path'];
-  $absolute = !empty($field['filefield_source_attach_absolute']);
+  $path = $settings['filefield_source_attach_path'];
+  $absolute = !empty($settings['filefield_source_attach_absolute']);
 
   // Replace user level tokens.
   // Node level tokens require a lot of complexity like temporary storage

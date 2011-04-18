@@ -12,7 +12,7 @@
 define('FILEFIELD_SOURCE_REMOTE_HINT_TEXT', 'http://example.com/files/file.png');
 
 /**
- * Implementation of hook_filefield_source_info().
+ * Implements hook_filefield_source_info().
  */
 function filefield_source_remote_info() {
   $source = array();
@@ -27,7 +27,7 @@ function filefield_source_remote_info() {
 }
 
 /**
- * Implementation of hook_menu().
+ * Implements hook_menu().
  */
 function filefield_source_remote_menu() {
   $items = array();
@@ -43,7 +43,7 @@ function filefield_source_remote_menu() {
 }
 
 /**
- * Implementation of hook_theme().
+ * Implements hook_theme().
  */
 function filefield_source_remote_theme() {
   return array(
@@ -55,7 +55,7 @@ function filefield_source_remote_theme() {
 }
 
 /**
- * Implementation of hook_filefield_source_settings().
+ * Implements hook_filefield_source_settings().
  */
 function filefield_source_remote_settings($op, $field) {
   $return = array();
@@ -89,15 +89,15 @@ function filefield_source_remote_process($element, $edit, &$form_state, $form) {
     '#value' => t('Transfer'),
     '#submit' => array('node_form_submit_build_node'),
     '#ahah' => array(
-       'path' => 'filefield/ahah/'. $element['#type_name'] .'/'. $element['#field_name'] .'/'. $element['#delta'],
-       'wrapper' => $element['#id'] .'-ahah-wrapper',
-       'method' => 'replace',
-       'effect' => 'fade',
-       'progress' => array(
-         'type' => 'bar',
-         'path' => 'filefield/remote/progress/' . $element['#type_name'] .'/'. $element['#field_name'] .'/'. $element['#delta'],
-         'message' => t('Starting transfer...'),
-       )
+      'path' => 'filefield/ahah/' . $element['#type_name'] . '/' . $element['#field_name'] . '/' . $element['#delta'],
+      'wrapper' => $element['#id'] . '-ahah-wrapper',
+      'method' => 'replace',
+      'effect' => 'fade',
+      'progress' => array(
+        'type' => 'bar',
+        'path' => 'filefield/remote/progress/' . $element['#type_name'] . '/' . $element['#field_name'] . '/' . $element['#delta'],
+        'message' => t('Starting transfer...'),
+      ),
     ),
   );
 
@@ -153,7 +153,7 @@ function filefield_source_remote_value($element, &$item) {
 
     // Perform basic extension check on the file before trying to transfer.
     $extensions = $field['widget']['file_extensions'];
-    $regex = '/\.('. ereg_replace(' +', '|', preg_quote($extensions)) .')$/i';
+    $regex = '/\.('. preg_replace('/[ +]/', '|', preg_quote($extensions)) .')$/i';
     if (!empty($extensions) && !preg_match($regex, $filename)) {
       form_error($element, t('Only files with the following extensions are allowed: %files-allowed.', array('%files-allowed' => $extensions)));
       return;

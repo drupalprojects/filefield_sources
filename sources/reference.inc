@@ -12,7 +12,7 @@
 define('FILEFIELD_SOURCE_REFERENCE_HINT_TEXT', 'example.png [fid:123]');
 
 /**
- * Implementation of hook_filefield_source_info().
+ * Implements hook_filefield_source_info().
  */
 function filefield_source_reference_info() {
   $source = array();
@@ -28,7 +28,7 @@ function filefield_source_reference_info() {
 }
 
 /**
- * Implementation of hook_menu().
+ * Implements hook_menu().
  */
 function filefield_source_reference_menu() {
   $items = array();
@@ -45,7 +45,7 @@ function filefield_source_reference_menu() {
 }
 
 /**
- * Implementation of hook_theme().
+ * Implements hook_theme().
  */
 function filefield_source_reference_theme() {
   return array(
@@ -61,7 +61,7 @@ function filefield_source_reference_theme() {
 }
 
 /**
- * Implementation of hook_filefield_source_settings().
+ * Implements hook_filefield_source_settings().
  */
 function filefield_source_reference_settings($op, $field) {
   $return = array();
@@ -115,10 +115,10 @@ function filefield_source_reference_process($element, $edit, &$form_state, $form
     '#submit' => array('node_form_submit_build_node'),
     '#name' => $element['#name'] . '[filefield_reference][button]',
     '#ahah' => array(
-       'path' => 'filefield/ahah/'. $element['#type_name'] .'/'. $element['#field_name'] .'/'. $element['#delta'],
-       'wrapper' => $element['#id'] .'-ahah-wrapper',
-       'method' => 'replace',
-       'effect' => 'fade',
+      'path' => 'filefield/ahah/' . $element['#type_name'] . '/' . $element['#field_name'] . '/' . $element['#delta'],
+      'wrapper' => $element['#id'] . '-ahah-wrapper',
+      'method' => 'replace',
+      'effect' => 'fade',
     ),
   );
 
