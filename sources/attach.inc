@@ -183,7 +183,7 @@ function _filefield_source_attach_options($path) {
     $options = array('' => t('-- Select file --'));
     foreach ($file_attach as $filename => $fileinfo) {
       $filename = basename($filename);
-      $options[$filename] = $filename;
+      $options[$fileinfo->filename] = $fileinfo->basename;
     }
   }
 
@@ -197,8 +197,7 @@ function _filefield_source_attach_options($path) {
 function filefield_source_attach_value($element, &$item) {
   if (!empty($item['filefield_attach']['filename'])) {
     $field = content_fields($element['#field_name'], $element['#type_name']);
-    $attach_path = _filefield_source_attach_directory($field['widget']);
-    $filepath = $attach_path . '/' . $item['filefield_attach']['filename'];
+    $filepath = $item['filefield_attach']['filename'];
 
     // Clean up the file name extensions and transliterate.
     $original_filepath = $filepath;
