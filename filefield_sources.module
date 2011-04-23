@@ -131,12 +131,16 @@ function filefield_sources_form($widget) {
 function filefield_sources_field_process($element, $edit, &$form_state, $form) {
   static $js_added;
 
+  // If not a recognized field instance, do not process.
+  if (!isset($element['#field_name']) || !($field = content_fields($element['#field_name'], $element['#type_name']))) {
+    return;
+  }
+
   // Do all processing as needed by each source.
   $sources = filefield_sources_info();
-  $field = content_fields($element['#field_name'], $element['#type_name']);
-  $enabled_sources = (array) $field['widget']['filefield_sources'];
+  $enabled_sources = isset($field['widget']['filefield_sources']) ? $field['widget']['filefield_sources'] : array();
   foreach ($sources as $source_name => $source) {
-    if (!$enabled_sources[$source_name]) {
+    if (empty($enabled_sources[$source_name])) {
       unset($sources[$source_name]);
     }
     elseif (isset($source['process'])) {

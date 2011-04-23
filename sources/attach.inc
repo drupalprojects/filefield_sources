@@ -56,7 +56,7 @@ function filefield_source_attach_settings($op, $field) {
     $return['source_attach']['filefield_source_attach_path'] = array(
       '#type' => 'textfield',
       '#title' => t('File attach path'),
-      '#default_value' => empty($field['filefield_source_attach_path']) ? 'file_attach' : $field['filefield_source_attach_path'],
+      '#default_value' => isset($field['filefield_source_attach_path']) ? $field['filefield_source_attach_path'] : 'file_attach',
       '#size' => 60,
       '#maxlength' => 128,
       '#description' => t('The directory within the <em>File attach location</em> that will contain attachable files.'),
@@ -252,7 +252,7 @@ function theme_filefield_source_attach_element($element) {
 
 function _filefield_source_attach_directory($settings, $account = NULL) {
   $account = isset($account) ? $account : $GLOBALS['user'];  
-  $path = $settings['filefield_source_attach_path'];
+  $path = isset($settings['filefield_source_attach_path']) ? $settings['filefield_source_attach_path'] : 'file_attach';
   $absolute = !empty($settings['filefield_source_attach_absolute']);
 
   // Replace user level tokens.
