@@ -76,7 +76,7 @@ Drupal.fileFieldSources = {
         $(textfield).addClass('hint');
       }
 
-      $(textfield).click(hideHintText);
+      $(textfield).focus(hideHintText);
       $(textfield).blur(showHintText);
 
       function showHintText() {
