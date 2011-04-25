@@ -210,7 +210,7 @@ function filefield_source_remote_value($element, &$item) {
     curl_setopt($ch, CURLOPT_WRITEFUNCTION, 'filefield_source_remote_curl_write');
     // Causes a warning if PHP safe mode is on.
     @curl_setopt($ch, CURLOPT_FOLLOWLOCATION, TRUE);
-    if (curl_exec($ch) && $file = field_file_save_file($filepath, $element['#upload_validators'], filefield_widget_file_path($field))) {
+    if (curl_exec($ch) && $file = field_file_save_file($filepath, $element['#upload_validators'], $directory)) {
       $item = array_merge($item, $file);
     }
     curl_close($ch);
