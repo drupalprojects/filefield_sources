@@ -72,9 +72,9 @@ function filefield_source_remote_settings($op, $field) {
 function filefield_source_remote_process($element, $edit, &$form_state, $form) {
 
   $element['filefield_remote'] = array(
-    '#theme' => 'filefield_source_remote_element',
     '#weight' => 100.5,
-    '#access' => empty($element['fid']['#value']),
+    '#theme' => 'filefield_source_remote_element',
+    '#filefield_source' => TRUE, // Required for proper theming.
     '#filefield_sources_hint_text' => FILEFIELD_SOURCE_REMOTE_HINT_TEXT,
   );
 
@@ -85,8 +85,10 @@ function filefield_source_remote_process($element, $edit, &$form_state, $form) {
   );
 
   $element['filefield_remote']['transfer'] = array(
+    '#name' => implode('_', $element['#array_parents']) . '_transfer',
     '#type' => 'submit',
     '#value' => t('Transfer'),
+    '#validate' => array(),
     '#submit' => array('node_form_submit_build_node'),
     '#ahah' => array(
       'path' => 'filefield/ahah/' . $element['#type_name'] . '/' . $element['#field_name'] . '/' . $element['#delta'],

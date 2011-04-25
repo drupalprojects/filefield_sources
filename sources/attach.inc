@@ -116,9 +116,9 @@ function filefield_source_attach_process($element, $edit, &$form_state, $form) {
   $settings = $instance;
 
   $element['filefield_attach'] = array(
-    '#theme' => 'filefield_source_attach_element',
     '#weight' => 100.5,
-    '#access' => empty($element['fid']['#value']),
+    '#theme' => 'filefield_source_attach_element',
+    '#filefield_source' => TRUE, // Required for proper theming.
   );
 
   $path = _filefield_source_attach_directory($field['widget']);
@@ -156,8 +156,10 @@ function filefield_source_attach_process($element, $edit, &$form_state, $form) {
   }
 
   $element['filefield_attach']['attach'] = array(
+    '#name' => implode('_', $element['#array_parents']) . '_attach',
     '#type' => 'submit',
     '#value' => isset($attach_message) ? t('Refresh') : t('Attach'),
+    '#validate' => array(),
     '#submit' => array('node_form_submit_build_node'),
     '#ahah' => array(
       'path' => 'filefield/ahah/' . $element['#type_name'] . '/' . $element['#field_name'] . '/' . $element['#delta'],
@@ -225,9 +227,9 @@ function filefield_source_attach_value($element, &$item) {
     if (file_exists($filepath) && $filepath != $original_filepath) {
       rename($filepath, $original_filepath);
     }
-  }
 
-  $item['filefield_attach']['filename'] = '';
+    $item['filefield_attach']['filename'] = '';
+  }
 }
 
 /**

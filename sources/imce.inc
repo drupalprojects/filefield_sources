@@ -78,8 +78,8 @@ function filefield_source_imce_process($element, $edit, &$form_state, $form) {
 
   $element['filefield_imce'] = array(
     '#weight' => 100.5,
-    '#access' => empty($element['fid']['#value']),
     '#theme' => 'filefield_source_imce_element',
+    '#filefield_source' => TRUE, // Required for proper theming.
     '#description' => filefield_sources_element_validation_help($element['#upload_validators']),
   );
 
@@ -102,8 +102,10 @@ function filefield_source_imce_process($element, $edit, &$form_state, $form) {
   );
 
   $element['filefield_imce']['select'] = array(
+    '#name' => implode('_', $element['#array_parents']) . '_imce_select',
     '#type' => 'submit',
     '#value' => t('Select'),
+    '#validate' => array(),
     '#submit' => array('node_form_submit_build_node'),
     '#name' => $element['#name'] . '[filefield_imce][button]',
     '#id' => $select_id,

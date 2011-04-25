@@ -29,6 +29,7 @@ function filefield_sources_elements() {
 
   foreach (module_invoke_all('filefield_sources_widgets') as $widget) {
     $elements[$widget]['#process'] = array('filefield_sources_field_process');
+    $elements[$widget]['#pre_render'] = array('filefield_sources_field_pre_render');
     $elements[$widget]['#element_validate'] = array('filefield_sources_field_validate');
     $elements[$widget]['#filefield_value_callback'] = array('filefield_sources_field_value');
   }
@@ -177,6 +178,21 @@ function filefield_sources_field_process($element, $edit, &$form_state, $form) {
     );
   }
 
+  return $element;
+}
+
+/**
+ * A #pre_render function to hide sources if a file is currently uploaded.
+ */
+function filefield_sources_field_pre_render($element) {
+  // If we already have a file, we don't want to show the upload controls.
+  if (!empty($element['#value']['fid'])) {
+    foreach (element_children($element) as $key) {
+      if (!empty($element[$key]['#filefield_source'])) {
+        $element['upload']['#access'] = FALSE;
+      }
+    }
+  }
   return $element;
 }
 
