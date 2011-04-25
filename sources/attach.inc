@@ -201,6 +201,12 @@ function filefield_source_attach_value($element, &$item) {
     $field = content_fields($element['#field_name'], $element['#type_name']);
     $filepath = $item['filefield_attach']['filename'];
 
+    // Check that the destination is writable.
+    $directory = filefield_widget_file_path($field);
+    if (!field_file_check_directory($directory, FILE_CREATE_DIRECTORY, $element['filefield_attach']['filename'])) {
+      return;
+    }
+
     // Clean up the file name extensions and transliterate.
     $original_filepath = $filepath;
     $new_filepath = filefield_sources_clean_filename($filepath);
@@ -214,7 +220,7 @@ function filefield_source_attach_value($element, &$item) {
     }
 
     // Save the file to the new location.
-    if ($file = field_file_save_file($filepath, $validators, filefield_widget_file_path($field))) {
+    if ($file = field_file_save_file($filepath, $validators, $directory)) {
       $item = array_merge($item, $file);
 
       // Delete the original file if "moving" the file instead of copying.

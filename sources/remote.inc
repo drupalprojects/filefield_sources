@@ -114,6 +114,18 @@ function filefield_source_remote_value($element, &$item) {
     $field = content_fields($element['#field_name'], $element['#type_name']);
     $url = $item['filefield_remote']['url'];
 
+    // Check that the temporary directory is writable.
+    $temporary_directory = file_directory_temp();
+    if (!field_file_check_directory($temporary_directory, FILE_MODIFY_PERMISSIONS, $item['filefield_remote']['url'])) {
+      return;
+    }
+
+    // Check that the destination is writable.
+    $directory = filefield_widget_file_path($field);
+    if (!field_file_check_directory($directory, FILE_CREATE_DIRECTORY, $item['filefield_remote']['url'])) {
+      return;
+    }
+
     // Check the headers to make sure it exists and is within the allowed size.
     $ch = curl_init();
     curl_setopt($ch, CURLOPT_URL, $url);
@@ -159,7 +171,7 @@ function filefield_source_remote_value($element, &$item) {
 
     $pathinfo = pathinfo($filename);
     $filename = filefield_sources_clean_filename($filename);
-    $filepath = file_create_filename($filename, file_directory_temp());
+    $filepath = file_create_filename($filename, $temporary_directory);
 
     if (empty($pathinfo['extension'])) {
       form_error($element, t('The remote URL must be a file and have an extension.'));
