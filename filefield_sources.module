@@ -186,10 +186,10 @@ function filefield_sources_field_process($element, $edit, &$form_state, $form) {
  */
 function filefield_sources_field_pre_render($element) {
   // If we already have a file, we don't want to show the upload controls.
-  if (!empty($element['#value']['fid'])) {
+  if (!empty($element['fid']['#value'])) {
     foreach (element_children($element) as $key) {
       if (!empty($element[$key]['#filefield_source'])) {
-        $element['upload']['#access'] = FALSE;
+        $element[$key]['#access'] = FALSE;
       }
     }
   }
