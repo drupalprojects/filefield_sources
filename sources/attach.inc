@@ -185,7 +185,7 @@ function _filefield_source_attach_options($path) {
     $options = array('' => t('-- Select file --'));
     foreach ($file_attach as $filename => $fileinfo) {
       $filename = basename($filename);
-      $options[$fileinfo->filename] = $fileinfo->basename;
+      $options[$fileinfo->filename] = preg_replace('/^' . preg_quote($path, '/') . '\//', '', $fileinfo->filename, 1);
     }
   }
 
