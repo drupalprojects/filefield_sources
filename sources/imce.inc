@@ -70,6 +70,7 @@ function filefield_source_imce_settings($op, $field) {
       '#type' => 'fieldset',
       '#collapsible' => TRUE,
       '#collapsed' => TRUE,
+      '#access' => module_exists('imce'),
     );
     $return['sources_imce']['filefield_source_imce_mode'] = array(
       '#type' => 'radios', 
