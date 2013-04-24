@@ -114,7 +114,7 @@ function filefield_source_imce_process($element, $edit, &$form_state, $form) {
     '#disabled' => TRUE,
     '#id' => $filepath_id,
     '#attributes' => array(
-      'onchange' => "if (this.value.length > 0) { jQuery(this).attr('disabled', ''); jQuery('#$select_id').triggerHandler('mousedown'); }",
+      'onchange' => "if (this.value.length > 0) { jQuery(this)..removeAttr('disabled'); jQuery('#$select_id').triggerHandler('mousedown'); }",
       'style' => 'position:absolute; left: -9999em',
     ),
   );
