@@ -217,7 +217,7 @@ function filefield_source_reference_get_files($filename, $field = NULL) {
 
     // 1 == contains, 0 == starts with.
     $like = empty($field['widget']['filefield_source_autocomplete']) ? '%s%%' : '%%%s%%';
-    $result = db_query_range("SELECT f.* FROM {" . $db_info['table'] . "} c INNER JOIN {files} f ON c." . $db_info['columns']['fid']['column'] . " = f.fid WHERE f.filename LIKE '" . $like . "' AND f.status = 1 ORDER BY f.timestamp DESC", $filename, 0, 30);
+    $result = db_query_range("SELECT f.* FROM {" . $db_info['table'] . "} c INNER JOIN {files} f ON c." . $db_info['columns']['fid']['column'] . " = f.fid WHERE f.filename LIKE '" . $like . "' AND f.status = 1 GROUP BY f.fid ORDER BY f.timestamp DESC", $filename, 0, 30);
 
     while ($file = db_fetch_object($result)) {
       $files[$file->fid] = $file;
