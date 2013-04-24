@@ -137,7 +137,7 @@ function filefield_source_attach_process($element, $edit, &$form_state, $form) {
     $attach_description = t('Please check your settings for the %field field.',  array('%field' => $instance['label']));
   }
   elseif (!count($options)) {
-    $attach_message = t('There currently no files to attach.');
+    $attach_message = t('There currently are no files to attach.');
     $attach_description = $description;
   }
 
