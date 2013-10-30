@@ -137,12 +137,16 @@ function filefield_source_reference_value($element, &$item) {
       $fid = $matches[1];
       if ($file = field_file_load($fid)) {
 
-        // Run all the normal validations, minus file size restrictions.
+        // Remove file size restrictions, since the file already exists on disk.
         if (isset($element['#upload_validators']['filefield_validate_size'])) {
           unset($element['#upload_validators']['filefield_validate_size']);
         }
 
-        if (filefield_sources_element_validate($element, (object) $file)) {
+        // Check that the user has access to this file through hook_download().
+        if (!filefield_sources_file_access($file['filepath'])) {
+          form_error($element, t('You do not have permission to use the selected file.'));
+        }
+        elseif (filefield_sources_element_validate($element, (object) $file)) {
           $item = array_merge($item, $file);
         }
       }
@@ -218,7 +222,6 @@ function filefield_source_reference_get_files($filename, $field = NULL) {
     // 1 == contains, 0 == starts with.
     $like = empty($field['widget']['filefield_source_autocomplete']) ? '%s%%' : '%%%s%%';
     $result = db_query_range("SELECT f.* FROM {" . $db_info['table'] . "} c INNER JOIN {files} f ON c." . $db_info['columns']['fid']['column'] . " = f.fid WHERE f.filename LIKE '" . $like . "' AND f.status = 1 GROUP BY f.fid ORDER BY f.timestamp DESC", $filename, 0, 30);
-
     while ($file = db_fetch_object($result)) {
       $files[$file->fid] = $file;
     }
